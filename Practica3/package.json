@@ -1,0 +1,17 @@
+{
+  "name": "practica3",
+  "version": "1.0.0",
+  "type": "module",
+  "main": "main.js",
+  "scripts": {
+    "start": "node main.js",
+    "test": "node main.js"
+  },
+  "keywords": [
+    "javascript",
+    "math",
+    "testing"
+  ],
+  "author": "",
+  "license": "MIT"
+}
