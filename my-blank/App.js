@@ -18,13 +18,14 @@ import React,{useState} from 'react' ;
 //   )
 // }
 
-const Texto=()=>{
+const Texto=({style})=>{ //uso del style
   const[contenido, setContenido] = useState('Hello World React Native')
   const actualizarTexto = () => {
     setContenido('Estado actualizado')
   }
   return(
-    <Text onPress={actualizarTexto}>{contenido}</Text>
+    // utilizar el estilo texto y uso de corchetes para usar más de una propiedad
+    <Text style={[styles.text, style] }onPress={actualizarTexto}>{contenido}</Text>
   )
 }
 
@@ -42,10 +43,12 @@ export default function App() {
       <Texto>World</Texto>
       <Texto>React Native</Texto>
       */}
+      {/*uso de los componentes del style*/}
+      <Texto style={styles.blue}></Texto>
+      <Texto style={styles.yellow}></Texto>
+      <Texto style={styles.purple}></Texto>
 
-      <Texto></Texto>
-
-      <Button title='Presioname!'></Button>
+      {/* <Button title='Presioname!'></Button> */}
 
       <StatusBar style="auto" />
     </View>
@@ -54,11 +57,42 @@ export default function App() {
 
 //Zona 3: Estilos-Estetica del archivo
 /*Hojas de estilo a la forma de reactive, similar a css pero NO es css */
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: 'base-line', //izquierda a derecha, se usan los mismo que los de justifyContent
+    //stretch, en este caso hay que desactivar el width para evitar error
+    //con el uso del base-line se desactiva el height
+    //de arriba a abajo
+    justifyContent: 'center', //flex-start para posicionar los elementos en cierto punto
+    //space-between, space-around, space-evely
+    flexDirection: 'column', //para que se pueda ver el texto en una sola linea
+    //row-reverse, column-reverse
   },
+  // Clase
+  //uso de propiedades
+  //en react es densidad por pixeles, osea que depende de la calidad de la pantalla que se va a reflejar el resultado visual
+  text:{
+    color: 'black',
+    fontSize: 25,
+    //height: 100, //100 de lo que se tiene disponible en la pantalla
+    // width : 100,
+    
+
+  },
+  blue:{
+    //flex:1, //uso de la propiedad flex
+    backgroundColor: 'blue'
+  },
+  yellow:{
+    backgroundColor: 'yellow'
+  },
+  purple:{
+    backgroundColor: 'purple'
+  }
+
+
+
 });
