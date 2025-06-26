@@ -5,7 +5,7 @@ import React, { useState, useEffect } from 'react';
 const FondoBienvenida = () => {
   return (
     <ImageBackground
-      source={require('./assets/fondo.jpeg')}
+      source={require('./assets/fondo.jpg')}
       style={styles.fondo}
     >
       <View style={styles.contenido}>
