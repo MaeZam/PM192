@@ -1,44 +1,29 @@
+//Zona 1: importaciones
 import React, { useState, useEffect } from 'react';
-import { 
-  View, 
-  Text, 
-  TextInput, 
-  TouchableOpacity, 
-  Switch, 
-  Alert, 
-  StyleSheet,
-  SafeAreaView,
-  ImageBackground,
-  Image
-} from 'react-native';
+import {View,Text,TextInput, TouchableOpacity, Switch, Alert, StyleSheet, SafeAreaView,ImageBackground, Image} from 'react-native';
 
 export default function App() {
-  const [pantallaActual, setPantallaActual] = useState('splash'); // 'splash', 'login', 'registro'
-  
-  // Estados del registro
-  const [nombreCompleto, setNombreCompleto] = useState('');
-  const [correoRegistro, setCorreoRegistro] = useState('');
-  const [contrasenaRegistro, setContrasenaRegistro] = useState('');
-  const [aceptaTerminos, setAceptaTerminos] = useState(false);
-  
-  // Estados del login
-  const [correoLogin, setCorreoLogin] = useState('');
-  const [contrasenaLogin, setContrasenaLogin] = useState('');
+  const [pantallaActual, setPantallaActual] = useState('splash'); // 'splash', 'registro'
 
-  // Base de datos de usuarios registrados (en memoria)
-  const [usuariosRegistrados, setUsuariosRegistrados] = useState([]);
+  // Estados del registro
+  const [nombreCompleto, setNombreCompleto] = useState(''); // Nombre completo del usuario
+  const [correoRegistro, setCorreoRegistro] = useState(''); // Correo electrónico del usuario
+  const [contrasenaRegistro, setContrasenaRegistro] = useState('');// Contraseña del usuario
+  const [aceptaTerminos, setAceptaTerminos] = useState(false);// Estado del switch para aceptar términos y condiciones
 
   // Timer del Splash Screen
   useEffect(() => {
+    // Cambiar a la pantalla de registro después de 3 segundos
     const temporizador = setTimeout(() => {
-      setPantallaActual('login');
+      setPantallaActual('registro');
     }, 3000);
+    // Limpiar el temporizador al desmontar el componente
     return () => clearTimeout(temporizador);
   }, []);
 
   // Función para validar correo electrónico
   const validarCorreo = (correo) => {
-    const expresionRegular = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const expresionRegular = /^[^\s@]+@[^\s@]+\.[^\s@]+$/; // Expresión regular para validar el formato de correo electrónico
     return expresionRegular.test(correo);
   };
 
@@ -78,15 +63,6 @@ export default function App() {
       return;
     }
 
-    // Verificar si el correo ya está registrado
-    const usuarioExistente = usuariosRegistrados.find(
-      usuario => usuario.correo.toLowerCase() === correoRegistro.toLowerCase()
-    );
-    if (usuarioExistente) {
-      Alert.alert('Error', 'Este correo electrónico ya está registrado');
-      return;
-    }
-
     // Validar contraseña vacía
     if (contrasenaRegistro.trim() === '') {
       Alert.alert('Error', 'Ingresa tu contraseña');
@@ -105,82 +81,23 @@ export default function App() {
       return;
     }
 
-    // Agregar usuario a la base de datos
-    const nuevoUsuario = {
-      nombre: nombreCompleto,
-      correo: correoRegistro,
-      contrasena: contrasenaRegistro
-    };
-    setUsuariosRegistrados([...usuariosRegistrados, nuevoUsuario]);
-
     // Registro exitoso
     Alert.alert(
       'Registro Exitoso',
-      `Datos ingresados correctamente:\n\nNombre: ${nombreCompleto}\nCorreo: ${correoRegistro}\n\n¡Ya puedes iniciar sesión!`,
+      `Datos ingresados correctamente:\n\nNombre: ${nombreCompleto}\nCorreo: ${correoRegistro}`,
       [
         {
-          text: 'Ir a Iniciar Sesión',
+          text: 'OK',
           onPress: () => {
+            // Limpiar formulario
             setNombreCompleto('');
             setCorreoRegistro('');
             setContrasenaRegistro('');
             setAceptaTerminos(false);
-            setPantallaActual('login');
           }
         }
       ]
     );
-  };
-
-  // Función de login
-  const manejarLogin = () => {
-    // Validar correo vacío
-    if (correoLogin.trim() === '') {
-      Alert.alert('Error', 'Ingresa tu correo electrónico');
-      return;
-    }
-
-    // Validar formato de correo
-    if (!validarCorreo(correoLogin)) {
-      Alert.alert('Error', 'Ingresa un correo electrónico válido');
-      return;
-    }
-
-    // Validar contraseña vacía
-    if (contrasenaLogin.trim() === '') {
-      Alert.alert('Error', 'Ingresa tu contraseña');
-      return;
-    }
-
-    // Validar longitud de contraseña
-    if (!validarContrasena(contrasenaLogin)) {
-      Alert.alert('Error', 'La contraseña debe tener al menos 6 caracteres');
-      return;
-    }
-
-    // Buscar usuario en la base de datos
-    const usuarioEncontrado = usuariosRegistrados.find(
-      usuario => 
-        usuario.correo.toLowerCase() === correoLogin.toLowerCase() &&
-        usuario.contrasena === contrasenaLogin
-    );
-
-    if (!usuarioEncontrado) {
-      // Verificar si el correo está registrado pero la contraseña es incorrecta
-      const correoExiste = usuariosRegistrados.find(
-        usuario => usuario.correo.toLowerCase() === correoLogin.toLowerCase()
-      );
-      
-      if (correoExiste) {
-        Alert.alert('Error de Autenticación', 'Contraseña incorrecta');
-      } else {
-        Alert.alert('Error de Autenticación', 'Usuario no registrado. Por favor, regístrate primero.');
-      }
-      return;
-    }
-
-    // Login exitoso
-    Alert.alert('Inicio de Sesión Exitoso', `¡Bienvenido ${usuarioEncontrado.nombre}!\nCorreo: ${correoLogin}`);
   };
 
   // RENDERIZADO PRINCIPAL
@@ -194,62 +111,13 @@ export default function App() {
       >
         <SafeAreaView style={estilos.contenedor}>
           <View style={estilos.splash}>
-            <Image 
-              source={require('./assets/logo.png')} 
+            <Image
+              source={require('./assets/logo.png')}
               style={estilos.imagenLogo}
             />
-            <Text style={estilos.tituloApp}>Welcome to my home...</Text>
+            {/* Título de la app */}
+            <Text style={estilos.tituloApp}>Welcome to Cats World</Text>
             <Text style={estilos.textoCargando}>Cargando...</Text>
-          </View>
-        </SafeAreaView>
-      </ImageBackground>
-    );
-  }
-
-  // PANTALLA DE LOGIN
-  if (pantallaActual === 'login') {
-    return (
-      <ImageBackground
-        source={require('./assets/fondo.jpeg')}
-        style={estilos.imagenFondo}
-      >
-        <SafeAreaView style={estilos.contenedor}>
-          <View style={estilos.formulario}>
-            <Text style={estilos.logoTexto}>INICIAR SESIÓN</Text>
-            <Text style={estilos.titulo}>Ingresa a tu cuenta</Text>
-
-            <TextInput
-              style={estilos.input}
-              placeholder="Correo electrónico"
-              placeholderTextColor="#9C4DCC"
-              value={correoLogin}
-              onChangeText={setCorreoLogin}
-              keyboardType="email-address"
-              autoCapitalize="none"
-            />
-
-            <TextInput
-              style={estilos.input}
-              placeholder="Contraseña"
-              placeholderTextColor="#9C4DCC"
-              value={contrasenaLogin}
-              onChangeText={setContrasenaLogin}
-              secureTextEntry={true}
-            />
-
-            <TouchableOpacity 
-              style={estilos.boton}
-              onPress={manejarLogin}
-            >
-              <Text style={estilos.textoBoton}>Iniciar Sesión</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity 
-              style={[estilos.boton, estilos.botonSecundario]}
-              onPress={() => setPantallaActual('registro')}
-            >
-              <Text style={estilos.textoBotonSecundario}>¿No tienes cuenta? Regístrate</Text>
-            </TouchableOpacity>
           </View>
         </SafeAreaView>
       </ImageBackground>
@@ -264,10 +132,14 @@ export default function App() {
         style={estilos.imagenFondo}
       >
         <SafeAreaView style={estilos.contenedor}>
+          {/* Contenedor del formulario */}
           <View style={estilos.formulario}>
+            {/* Título del formulario */}
             <Text style={estilos.logoTexto}>REGISTRO</Text>
+            {/* Título principal del registro */}
             <Text style={estilos.titulo}>Crea tu cuenta</Text>
 
+            {/* Input para nombre completo */}
             <TextInput
               style={estilos.input}
               placeholder="Nombre completo"
@@ -276,6 +148,7 @@ export default function App() {
               onChangeText={setNombreCompleto}
             />
 
+            {/* Input para correo electrónico */}
             <TextInput
               style={estilos.input}
               placeholder="Correo electrónico"
@@ -286,6 +159,7 @@ export default function App() {
               autoCapitalize="none"
             />
 
+            {/* Input para contraseña */}
             <TextInput
               style={estilos.input}
               placeholder="Contraseña"
@@ -294,10 +168,13 @@ export default function App() {
               onChangeText={setContrasenaRegistro}
               secureTextEntry={true}
             />
+            
+            {/* Mensaje de ayuda para la contraseña */}
             <Text style={estilos.ayudaContrasena}>
               La contraseña debe tener al menos 6 caracteres
             </Text>
 
+            {/* Contenedor para el switch */}
             <View style={estilos.contenedorSwitch}>
               <Switch
                 value={aceptaTerminos}
@@ -307,19 +184,13 @@ export default function App() {
               />
               <Text style={estilos.textoSwitch}>Acepto términos y condiciones</Text>
             </View>
-
-            <TouchableOpacity 
+            
+            {/* Botón para registrarse */}
+            <TouchableOpacity
               style={estilos.boton}
               onPress={manejarRegistro}
             >
               <Text style={estilos.textoBoton}>Registrarse</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity 
-              style={[estilos.boton, estilos.botonSecundario]}
-              onPress={() => setPantallaActual('login')}
-            >
-              <Text style={estilos.textoBotonSecundario}>¿Ya tienes cuenta? Inicia sesión</Text>
             </TouchableOpacity>
           </View>
         </SafeAreaView>
@@ -330,13 +201,16 @@ export default function App() {
   // FALLBACK - Si no coincide con ninguna pantalla
   return (
     <SafeAreaView style={estilos.contenedor}>
+      {/* Contenedor del mensaje de error */}
       <View style={estilos.formulario}>
+        {/* Mensaje de error con el nombre de la pantalla actual */}
         <Text style={estilos.titulo}>ERROR - Pantalla: {pantallaActual}</Text>
-        <TouchableOpacity 
+        {/* Botón para ir al registro */}
+        <TouchableOpacity
           style={estilos.boton}
-          onPress={() => setPantallaActual('login')}
+          onPress={() => setPantallaActual('registro')}
         >
-          <Text style={estilos.textoBoton}>Ir al Login</Text>
+          <Text style={estilos.textoBoton}>Ir al Registro</Text>
         </TouchableOpacity>
       </View>
     </SafeAreaView>
@@ -352,7 +226,7 @@ const estilos = StyleSheet.create({
     flex: 1,
     resizeMode: 'cover',
   },
-  
+
   // Splash Screen
   splash: {
     flex: 1,
